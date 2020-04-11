@@ -1,0 +1,6 @@
+{
+  "watch": [["dist"]],
+  "ext": "js",
+  "ignore": ["**/*.test.(ts|js)"],
+  "exec": "node --nolazy --inspect=0.0.0.0:8222 ./dist/index.js"
+}

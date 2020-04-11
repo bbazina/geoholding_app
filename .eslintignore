@@ -1,0 +1,37 @@
+*.seed
+*.log
+*.dat
+*.out
+*.pid
+*.gz
+*.swp
+
+# Dependency directory
+node_modules
+.yalc
+
+# Editors
+.idea
+*.iml
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Outputs
+dist
+
+tmp
+manifest.json
+.npmrc
+.yarnrc
+.env
+package-lock.json
+.serverless
+*.audit.json
+*-audit.json
+lib-cov
+coverage
+.clover
+
+yalc.lock
