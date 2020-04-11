@@ -16,7 +16,8 @@
     "start:dev": "tsc-watch --onSuccess nodemon",
     "build": "rm -rf dist/* && yarn tsc",
     "lint": "eslint . --ext .js,.ts",
-    "lint:fix": "lint -- --fix"
+    "lint:fix": "lint -- --fix",
+    "test": "echo Hello World!"
   },
   "devDependencies": {
     "@types/express": "^4.17.6",
