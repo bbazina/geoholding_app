@@ -13,7 +13,7 @@
   "scripts": {
     "start": "yarn build && node dist/index.js",
     "start:dev": "tsc-watch --onSuccess nodemon",
-    "build": "rm -rf dist/* && tsc",
+    "build": "rm -rf dist/* && yarn tsc",
     "lint": "eslint . --ext .js,.ts",
     "lint:fix": "lint -- --fix"
   },
