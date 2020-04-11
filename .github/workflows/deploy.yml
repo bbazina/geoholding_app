@@ -6,7 +6,8 @@ name: CI
 # events but only for the master branch
 on:
   push:
-    branches: [master]
+    branches:
+      - master
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -22,4 +23,4 @@ jobs:
           git remote add heroku https://heroku:$HEROKU_API_TOKEN@git.heroku.com/$HEROKU_APP_NAME.git
       - name: Deploy to Heroku
         if: github.ref == 'refs/heads/master' && job.status == 'success'
-        run: git push heroku origin HEAD:master -f
+        run: git push heroku HEAD:master -f
