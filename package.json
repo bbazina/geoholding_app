@@ -15,8 +15,7 @@
     "start:dev": "tsc-watch --onSuccess nodemon",
     "build": "rm -rf dist/* && yarn tsc",
     "lint": "eslint . --ext .js,.ts",
-    "lint:fix": "lint -- --fix",
-    "heroku-prebuild": "export NPM_CONFIG_PRODUCTION=false; export YARN_PRODUCTION=false;"
+    "lint:fix": "lint -- --fix"
   },
   "devDependencies": {
     "@types/express": "^4.17.6",
