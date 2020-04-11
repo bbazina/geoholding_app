@@ -3,7 +3,7 @@ import * as express from 'express';
 
 dotenv.config();
 
-const PORT = process.env.$PORT;
+const PORT = process.env.PORT;
 
 const app: express.Application = express();
 
