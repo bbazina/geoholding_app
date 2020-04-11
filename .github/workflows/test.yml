@@ -9,13 +9,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+        env:
+          NODE_VERSION: 12.x
       - uses: actions/checkout@v2
       - name: Use Node.js $NODE_VERSION
         uses: actions/setup-node@v1
         with:
           node-version: $NODE_VERSION
-        env:
-          NODE_VERSION: 12.x
       - run: npm install -g yarn
       - name: Run Tests
         run: |
