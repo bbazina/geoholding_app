@@ -1,10 +1,10 @@
 import * as dotenv from 'dotenv';
 import * as express from 'express';
+import { EnvVar, ENV } from './core/utils';
 
 dotenv.config();
 
-const PORT = process.env.PORT;
-
+const PORT = EnvVar.getString(ENV.PORT);
 const app: express.Application = express();
 
 app.get('/', function (req, res) {
