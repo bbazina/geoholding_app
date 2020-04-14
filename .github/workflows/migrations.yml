@@ -1,0 +1,67 @@
+name: Migrations Deploy
+
+on:
+  push:
+    branches: [master, develop]
+  pull_request:
+    branches: [master, develop]
+
+jobs:
+  run-migrations:
+    name: Run Migrations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: Use Yarn
+        run: npm install -g yarn
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v1
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Use Heroku-cli
+        run: yarn global add heroku
+
+      - name: Install Dependencies
+        run: yarn
+
+      - name: Set Env Variables
+        uses: allenevans/set-env@v1.1.0
+        with:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+          NODE_TLS_REJECT_UNAUTHORIZED: '0'
+
+      - name: Run Migrations Development
+        if: github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/master'
+        run: |
+          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-dev) yarn migration:run
+
+      - name: Run Migrations Staging
+        if: github.ref == 'refs/heads/develop'
+        run: |
+          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-stage) yarn migration:run
+
+      - name: Run Migrations Production
+        if: github.ref == 'refs/heads/master'
+        run: |
+          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME) yarn migration:run
+
+      - name: Clean Development DB
+        if: github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/master'
+        run: |
+          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME) yarn db:clean

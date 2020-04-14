@@ -19,6 +19,7 @@
     "lint:fix": "lint -- --fix",
     "test": "echo Hello World!",
     "db:create": "ts-node scripts/create-database",
+    "db:clean": "ts-node scripts/clean-database",
     "typeorm": "ts-node ./node_modules/typeorm/cli.js",
     "migration:run": "yarn typeorm migration:run",
     "migration:revert": "yarn typeorm migrations:revert",
@@ -50,6 +51,7 @@
   },
   "dependencies": {
     "dotenv": "^8.2.0",
+    "dotenvi": "^0.8.1",
     "express": "^4.17.1",
     "pg": "^8.0.2",
     "reflect-metadata": "^0.1.13",

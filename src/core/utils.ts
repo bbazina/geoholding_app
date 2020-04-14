@@ -1,29 +1,41 @@
-export class EnvVar {
-  public static getString(name: string) {
-    const value = process.env[name];
-    if (!value) {
-      console.warn(`Value "${name}" is not defined!`);
-      return '';
-    }
-    return value;
-  }
-  public static getBoolean(name: string) {
-    const value = process.env[name];
-    if (value === 'true') {
-      return true;
-    } else if (value === 'false') {
-      return false;
-    } else {
-      console.warn(`Value is not defined as boolean! ${name}:${value}`);
-      return !!value;
-    }
-  }
-}
+export class Config {
+  private readonly config: { [k: string]: string };
 
-export enum ENV {
-  PORT = 'PORT',
-  DB_USERNAME = 'DB_USERNAME',
-  DB_PASSWORD = 'DB_PASSWORD',
-  DB_NAME = 'DB_NAME',
-  DB_HOST = 'DB_HOST',
+  constructor(config = process.env) {
+    this.config = config;
+  }
+  public getBoolean(setting: string) {
+    if (this.config === undefined) {
+      throw new Error('Config is not initialized');
+    }
+    return Boolean(this.config[setting]);
+  }
+
+  public getString(setting: string) {
+    if (this.config === undefined) {
+      throw new Error('Config is not initialized');
+    }
+    return String(this.config[setting]);
+  }
+
+  public getNumber(setting: string) {
+    if (this.config === undefined) {
+      throw new Error('Config is not initialized');
+    }
+    return Number(this.config[setting]);
+  }
+  public getDatabaseConnectionString(databaseName: string | null = null) {
+    const { DB_USERNAME, DB_PASSWORD, DB_NAME, DB_HOST, DB_PORT } = this.config;
+    return this.createDatabaseConnectionString(DB_USERNAME, DB_PASSWORD, DB_HOST, databaseName || DB_NAME, DB_PORT);
+  }
+
+  private createDatabaseConnectionString(
+    dbUser: string,
+    dbPassword: string,
+    dbEndpoint: string,
+    dbName: string,
+    dbPort = '5432'
+  ) {
+    return process.env.DATABASE_URL || `postgres://${dbUser}:${dbPassword}@${dbEndpoint}:${dbPort}/${dbName}`;
+  }
 }
