@@ -51,4 +51,4 @@ jobs:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
           HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
         run: |
-          DATABASE_URL=$($HEROKU_API_KEY heroku config:get DATABASE_URL -a $HEROKU_APP_NAME) echo $DATABASE_URL
+          export HEROKU_API_KEY=$HEROKU_API_KEY && export DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME) && echo $DATABASE_URL
