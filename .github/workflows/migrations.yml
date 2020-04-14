@@ -34,10 +34,10 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Use Heroku-cli
-        run: yarn global add heroku
-
-      - name: Install Dependencies
-        run: yarn
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: |
+          yarn global add heroku
+          yarn
 
       - name: Set Env Variables
         uses: allenevans/set-env@v1.1.0
