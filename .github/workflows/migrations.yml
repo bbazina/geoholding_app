@@ -33,8 +33,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Use Heroku-cli
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
+      - name: Install Dependencies
+        # if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: |
           yarn global add heroku
           yarn
