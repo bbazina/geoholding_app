@@ -49,7 +49,6 @@ jobs:
       - name: Run Migrations Development
         if: github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/master'
         run: |
-          echo "${heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-dev}"
           DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-dev) yarn migration:run
 
       - name: Run Migrations Staging
