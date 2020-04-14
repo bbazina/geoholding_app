@@ -24,6 +24,9 @@ jobs:
       - name: Use Yarn
         run: npm install -g yarn
 
+      - name: Install Dependencies
+        run: yarn
+
       - name: Run Migrations Dev
         if: github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/master'
         env:
