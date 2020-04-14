@@ -1,0 +1,52 @@
+name: Migrations Deploy
+
+on:
+  push:
+    branches: [master, develop]
+  pull_request:
+    branches: [master, develop]
+
+jobs:
+  run-migrations:
+    name: Run Migrations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: Use Heroku-cli
+        run: npm install -g heroku
+
+      - name: Use Yarn
+        run: npm install -g yarn
+
+      - name: Run Migrations Dev
+        if: github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/master'
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+        run: |
+          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-dev) yarn migration:run
+          echo $DATABASE_URL
+
+      - name: Run Migrations Staging
+        if: github.ref == 'refs/heads/develop'
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+        run: |
+          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-stage) yarn migration:run
+          echo $DATABASE_URL
+
+      - name: Run Migrations Prod
+        if: github.ref == 'refs/heads/master'
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+        run: |
+          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME) yarn migration:run
+          echo $DATABASE_URL
