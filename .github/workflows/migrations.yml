@@ -32,6 +32,7 @@ jobs:
         with:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
           HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+          NODE_TLS_REJECT_UNAUTHORIZED: '0'
 
       - name: Run Migrations Development
         if: github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/master'
