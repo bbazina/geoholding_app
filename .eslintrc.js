@@ -4,6 +4,8 @@ module.exports = {
   plugins: ['@typescript-eslint', 'prettier'],
   rules: {
     'prettier/prettier': 'error',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-namespace': 'off',
   },
   extends: [
     'eslint:recommended',
