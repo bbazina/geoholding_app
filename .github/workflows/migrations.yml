@@ -34,9 +34,8 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install Dependencies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        # if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: |
-          yarn add heroku
           yarn
 
       - name: Set Env Variables
