@@ -2,12 +2,9 @@
 /* eslint-disable */
 require('dotenv').config();
 
-const { DATABASE_URL, DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_NAME, IA_ENV } = process.env;
-const envs = ['development', 'staging', 'production'];
+const { DATABASE_URL, DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_NAME } = process.env;
 
-const useUrl = envs.includes(IA_ENV);
-
-const options = useUrl
+const options = Boolean(DATABASE_URL)
   ? { url: DATABASE_URL }
   : {
       host: DB_HOST,
