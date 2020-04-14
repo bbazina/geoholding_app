@@ -37,14 +37,19 @@ jobs:
       - name: Run Migrations Development
         if: github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/master'
         run: |
-          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-dev) && yarn migration:run
+          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-dev) yarn migration:run
 
       - name: Run Migrations Staging
         if: github.ref == 'refs/heads/develop'
         run: |
-          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-stage) && yarn migration:run
+          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-stage) yarn migration:run
 
       - name: Run Migrations Production
         if: github.ref == 'refs/heads/master'
         run: |
           DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME) yarn migration:run
+
+      - name: Clean Development DB
+        if: github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/master'
+        run: |
+          yarn db:clean
