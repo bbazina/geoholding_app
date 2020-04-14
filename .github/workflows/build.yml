@@ -10,12 +10,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-      - run: npm install -g yarn
+      - uses: bahmutov/npm-install@v1
+
+      - name: Use Yarn with Cache
+        run: yarn --frozen-lockfile
+
       - name: Run Build
-        run: |
-          yarn
-          yarn build
+        run: yarn build
