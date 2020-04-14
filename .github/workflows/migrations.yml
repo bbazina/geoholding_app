@@ -18,11 +18,23 @@ jobs:
         with:
           node-version: 12.x
 
-      - name: Use Heroku-cli
-        run: npm install -g heroku
-
       - name: Use Yarn
         run: npm install -g yarn
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v1
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Use Heroku-cli
+        run: yarn global add heroku
 
       - name: Install Dependencies
         run: yarn
@@ -52,4 +64,4 @@ jobs:
       - name: Clean Development DB
         if: github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/master'
         run: |
-          yarn db:clean
+        DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME) yarn db:clean
