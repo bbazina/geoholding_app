@@ -1,4 +1,4 @@
-name: Migrations Deploy
+name: Migrations
 
 on:
   push:
@@ -13,9 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: bahmutov/npm-install@v1
-
-      # - name: Use Yarn with Cache
-      #   run: yarn --frozen-lockfile
 
       - name: Set Env Variables
         uses: allenevans/set-env@v1.1.0
