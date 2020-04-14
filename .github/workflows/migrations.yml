@@ -46,8 +46,4 @@ jobs:
       - name: Run Migrations Production
         if: github.ref == 'refs/heads/master'
         run: |
-          echo $HEROKU_API_KEY
-          echo $HEROKU_API_NAME
-          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME)
-          echo $HEROKU_API_KEY
-          echo $DATABASE_URL
+          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME) yarn migration:run
