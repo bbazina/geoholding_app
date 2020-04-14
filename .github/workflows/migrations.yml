@@ -28,26 +28,22 @@ jobs:
         run: yarn
 
       - name: Set Env Variables
-        env:
+        uses: allenevans/set-env@v1.1.0
+        with:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
           HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
-        run: |
-          export HEROKU_API_KEY=$HEROKU_API_KEY
-          export HEROKU_APP_NAME=$HEROKU_APP_NAME
 
       - name: Run Migrations Development
         if: github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/master'
         run: |
-          export DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-dev) && yarn migration:run
+          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-dev) && yarn migration:run
 
       - name: Run Migrations Staging
         if: github.ref == 'refs/heads/develop'
         run: |
-          export DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-stage) && yarn migration:run
+          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-stage) && yarn migration:run
 
       - name: Run Migrations Production
         if: github.ref == 'refs/heads/master'
         run: |
-          echo $HEROKU_API_KEY
-          echo $HEROKU_APP_NAME
-          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME) yarn migration:run
+          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-stage) && yarn migration:run
