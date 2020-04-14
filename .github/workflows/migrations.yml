@@ -27,28 +27,25 @@ jobs:
       - name: Install Dependencies
         run: yarn
 
-      - name: Run Migrations Dev
-        if: github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/master'
+      - name: Set Env Variables
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
           HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
         run: |
-          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-dev) yarn migration:run
-          echo $DATABASE_URL
+          export HEROKU_API_KEY=$HEROKU_API_KEY
+          export HEROKU_APP_NAME=$HEROKU_APP_NAME
+
+      - name: Run Migrations Development
+        if: github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/master'
+        run: |
+          export DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-dev) && yarn migration:run
 
       - name: Run Migrations Staging
         if: github.ref == 'refs/heads/develop'
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
-          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
         run: |
-          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-stage) yarn migration:run
-          echo $DATABASE_URL
+          export DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-stage) && yarn migration:run
 
-      - name: Run Migrations Prod
+      - name: Run Migrations Production
         if: github.ref == 'refs/heads/master'
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
-          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
         run: |
-          export HEROKU_API_KEY=$HEROKU_API_KEY && export DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME) && echo $DATABASE_URL
+          export HEROKU_API_KEY=$HEROKU_API_KEY && export DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME) && yarn migration:run
