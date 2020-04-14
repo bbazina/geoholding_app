@@ -5,16 +5,22 @@ on:
     branches:
       - master
 jobs:
-  deploy:
+  deploy-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Use Heroku-cli
+      - run: npm install -g heroku
       - name: Add remote origin
         env:
-          HEROKU_API_TOKEN: ${{ secrets.HEROKU_API_TOKEN }}
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
           HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
         run: |
-          git remote add heroku https://heroku:$HEROKU_API_TOKEN@git.heroku.com/$HEROKU_APP_NAME.git
+          heroku git:remote -a $HEROKU_APP_NAME
       - name: Deploy to Heroku
         if: github.ref == 'refs/heads/master' && job.status == 'success'
-        run: git push heroku HEAD:master -f
+        run: git push heroku master -f
