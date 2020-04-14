@@ -34,9 +34,9 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install Dependencies
-        # if: steps.yarn-cache.outputs.cache-hit != 'true'
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: |
-          yarn global add heroku
+          yarn add heroku
           yarn
 
       - name: Set Env Variables
@@ -49,6 +49,7 @@ jobs:
       - name: Run Migrations Development
         if: github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/master'
         run: |
+          echo "${heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-dev}"
           DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-dev) yarn migration:run
 
       - name: Run Migrations Staging
