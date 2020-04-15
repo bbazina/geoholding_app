@@ -1,4 +1,4 @@
-name: Migrations Deploy
+name: Migrations
 
 on:
   push:
@@ -12,32 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - name: Use Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-
-      - name: Use Yarn
-        run: npm install -g yarn
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - uses: actions/cache@v1
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - name: Use Heroku-cli
-        run: yarn global add heroku
-
-      - name: Install Dependencies
-        run: yarn
+      - uses: bahmutov/npm-install@v1
 
       - name: Set Env Variables
         uses: allenevans/set-env@v1.1.0
@@ -64,4 +39,4 @@ jobs:
       - name: Clean Development DB
         if: github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/master'
         run: |
-          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME) yarn db:clean
+          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-dev) yarn db:clean
