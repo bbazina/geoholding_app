@@ -39,4 +39,4 @@ jobs:
       - name: Clean Development DB
         if: github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/master'
         run: |
-          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME) yarn db:clean
+          DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-dev) yarn db:clean
