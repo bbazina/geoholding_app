@@ -40,3 +40,10 @@ jobs:
         if: github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/master'
         run: |
           DATABASE_URL=$(heroku config:get DATABASE_URL -a $HEROKU_APP_NAME-dev) yarn db:clean
+
+      - name: Dispatch Event For Deploy
+        if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          event-type: deploy-event
